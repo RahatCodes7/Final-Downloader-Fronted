@@ -560,13 +560,15 @@
         if (title) title.textContent = t;
         if (meta) meta.textContent = RAPID_KEY ? (data.lengthSeconds? Math.floor(data.lengthSeconds/60)+':'+String(data.lengthSeconds%60).padStart(2,'0')+' • ' : '') + 'MP4' : ((data.duration? Math.floor(data.duration/60)+':'+String(data.duration%60).padStart(2,'0')+' • ' : '') + (data.formats&&data.formats[0]?data.formats[0].ext.toUpperCase():'MP4'));
         const fmtBox = document.querySelector('.dlp-formats');
-        if (fmtBox && Array.isArray(data.videos) && data.videos.length) {
-          fmtBox.innerHTML = data.videos.map((v,i)=>`<button class="fmt ${i===0?'active':''}" data-url="${encodeURIComponent(v.url)}">${v.quality||v.qualityLabel||'MP4'}</button>`).join('');
+        const vids = (data.videos && Array.isArray(data.videos.items)) ? data.videos.items : (Array.isArray(data.videos) ? data.videos : []);
+        if (fmtBox && vids.length) {
+          fmtBox.innerHTML = vids.map((v,i)=>`<button class="fmt ${i===0?'active':''}" data-url="${encodeURIComponent(v.url)}">${v.quality||v.qualityLabel||'MP4'}</button>`).join('');
           fmtBox.querySelectorAll('.fmt').forEach(b=>b.addEventListener('click',()=>{ fmtBox.querySelectorAll('.fmt').forEach(x=>x.classList.remove('active')); b.classList.add('active'); }));
         }
       pf.style.width='100%'; pt.textContent='প্রস্তুত — ডাউনলোড করুন';
       // store for download
-      window.__velix = { url: val, downloadUrl: (Array.isArray(data.videos)&&data.videos[0]) ? data.videos[0].url : null };
+      const vids2 = (data.videos && Array.isArray(data.videos.items)) ? data.videos.items : (Array.isArray(data.videos) ? data.videos : []);
+      window.__velix = { url: val, downloadUrl: (vids2[0]) ? vids2[0].url : null };
     } catch (e) { pt.textContent='সংযোগ ত্রুটি'; pf.style.width='0%'; }
   });
   // download button in preview card
