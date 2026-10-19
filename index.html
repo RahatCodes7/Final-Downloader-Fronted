@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BD Downloader — ভিডিও ডাউনলোডার</title>
+<meta name="description" content="ইউটিউব, ইনস্টাগ্রাম, ফেসবুক, টিকটক, টুইটার থেকে ভিডিও ডাউনলোড করুন সহজে — BD Downloader।" />
+<meta property="og:title" content="BD Downloader — ভিডিও ডাউনলোডার" />
+<meta property="og:description" content="দ্রুত, সহজ ও ফ্রি ভিডিও ডাউনলোডার।" />
+<meta property="og:type" content="website" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath d='M8 5v14l11-7z' fill='white'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #020817;
+    --bg2: #071327;
+    --card: rgba(12, 24, 52, 0.55);
+    --card2: rgba(8, 18, 40, 0.6);
+    --border: rgba(96, 165, 250, 0.18);
+    --border2: rgba(139, 92, 246, 0.25);
+    --blue: #3b82f6;
+    --cyan: #22d3ee;
+    --violet: #8b5cf6;
+    --purple: #a855f7;
+    --red: #ef4444;
+    --text: #e8eefc;
+    --muted: #94a3c4;
+    --dim: #5b6b92;
+    --glow-blue: 0 0 40px rgba(59,130,246,0.35);
+    --glow-cyan: 0 0 30px rgba(34,211,238,0.35);
+    --glow-purple: 0 0 40px rgba(139,92,246,0.35);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Noto Sans Bengali', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body.light { --bg:#f1f5f9; --bg2:#e2e8f0; --card:rgba(255,255,255,0.75); --card2:rgba(255,255,255,0.85); --border:rgba(59,130,246,0.25); --text:#0f172a; --muted:#475569; --dim:#94a3b8; background: radial-gradient(1200px 600px at 85% 10%, rgba(59,130,246,0.08), transparent 60%), radial-gradient(900px 500px at 10% 30%, rgba(139,92,246,0.06), transparent 60%), #f1f5f9; }
+  body.light header { background: rgba(241,245,249,0.7); }
+  body.light .url-box { background: rgba(255,255,255,0.8); }
+  body.light .plat { background: rgba(0,0,0,0.03); }
+  body { overflow-x: hidden; min-height: 100vh; background:
+    radial-gradient(1200px 600px at 85% 10%, rgba(59,130,246,0.12), transparent 60%),
+    radial-gradient(900px 500px at 10% 30%, rgba(139,92,246,0.10), transparent 60%),
+    var(--bg);
+  }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(2,8,23,0.6); backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(96,165,250,0.12);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-mark {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: grid; place-items: center; box-shadow: var(--glow-blue);
+  }
+  .logo-mark svg { width: 20px; height: 20px; fill: #fff; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .logo-name { font-weight: 700; font-size: 18px; letter-spacing: 0.5px; background: linear-gradient(90deg,#60a5fa,#a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .logo-sub { font-size: 11px; color: var(--muted); }
+  nav ul { display: flex; gap: 34px; list-style: none; }
+  nav a { font-size: 14px; font-weight: 500; color: var(--muted); transition: color .2s; }
+  nav a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .icon-btn { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); display: grid; place-items: center; color: var(--muted); cursor: pointer; }
+  .btn-primary { padding: 10px 18px; border-radius: 10px; background: linear-gradient(135deg,#3b82f6,#8b5cf6); color: #fff; font-weight: 600; font-size: 14px; box-shadow: var(--glow-blue); border: none; cursor: pointer; }
+  .btn-outline { padding: 9px 16px; border-radius: 10px; background: transparent; border: 1px solid var(--border); color: var(--text); font-weight: 600; font-size: 14px; cursor: pointer; }
+
+  /* Hero */
+  .hero, .platforms, .how, .features, .quality-wrap, .faq, .contact { scroll-margin-top: 80px; }
+  .hero { padding: 70px 0 40px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; min-height: 560px; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: rgba(59,130,246,0.12); border: 1px solid rgba(96,165,250,0.35); color: #93c5fd; font-size: 13px; font-weight: 600; margin-bottom: 22px; box-shadow: 0 0 24px rgba(59,130,246,0.25); }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+  h1 { font-size: 46px; line-height: 1.2; font-weight: 800; letter-spacing: -0.5px; }
+  .grad { background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-desc { margin-top: 18px; font-size: 16px; line-height: 1.7; color: var(--muted); max-width: 520px; }
+  .url-box { margin-top: 30px; display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 18px; border-radius: 16px; background: rgba(7,19,39,0.8); border: 1px solid rgba(96,165,250,0.35); backdrop-filter: blur(8px); box-shadow: 0 12px 50px rgba(59,130,246,0.25), inset 0 0 0 1px rgba(255,255,255,0.04); }
+  .url-box input { font-size: 16px; padding: 12px 4px; }
+  .url-box .icon { color: var(--dim); }
+  .url-box input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: inherit; font-size: 15px; padding: 10px 4px; }
+  .url-box input::placeholder { color: var(--dim); }
+  .dl-btn { padding: 12px 22px; border-radius: 10px; background: linear-gradient(135deg,#3b82f6,#8b5cf6); color: #fff; font-weight: 700; font-size: 15px; border: none; cursor: pointer; box-shadow: var(--glow-blue); }
+  .feat-indicators { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 18px 26px; }
+  .feat-indicators span { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .feat-indicators .chk { width: 16px; height: 16px; border-radius: 50%; background: rgba(34,211,238,0.15); border: 1px solid rgba(34,211,238,0.4); display: grid; place-items: center; color: var(--cyan); font-size: 10px; }
+
+  /* Artwork */
+  .art-wrap { position: relative; height: 520px; display: grid; place-items: center; }
+  .art-glow { position: absolute; inset: 0; background: radial-gradient(circle at 50% 55%, rgba(59,130,246,0.25), transparent 55%); filter: blur(20px); }
+  .art-card { position: relative; width: 420px; height: 500px; border-radius: 24px; overflow: hidden; border: 1px solid rgba(96,165,250,0.25); box-shadow: 0 30px 80px rgba(0,0,0,0.6), var(--glow-purple); background: linear-gradient(180deg,#0a1a3a,#020817); }
+  .art-card svg { width: 100%; height: 100%; display: block; }
+
+  .progress-wrap { margin-top: 14px; display: none; align-items: center; gap: 12px; }
+  .progress-wrap.show { display: flex; }
+  .progress-bar { flex: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#3b82f6,#8b5cf6); transition: width .3s; box-shadow: var(--glow-blue); }
+  .progress-text { font-size: 12px; color: var(--muted); min-width: 90px; }
+
+  /* Download preview card */
+  .dl-preview { padding: 22px; border-radius: 22px; background: linear-gradient(180deg, rgba(15,28,60,0.85), rgba(7,19,39,0.9)); border: 1px solid var(--border2); box-shadow: 0 24px 60px rgba(0,0,0,0.5), var(--glow-purple); display: flex; flex-direction: column; gap: 14px; }
+  .dlp-head { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .dlp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+  .dlp-thumb { height: 150px; border-radius: 14px; background: linear-gradient(135deg,#1e3a8a,#7c3aed); position: relative; display: grid; place-items: center; overflow: hidden; }
+  .dlp-thumb::after { content:''; position:absolute; inset:0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%); }
+  .dlp-play { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); display: grid; place-items: center; color: #fff; font-size: 20px; border: 1px solid rgba(255,255,255,0.3); z-index: 1; }
+  .dlp-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .dlp-meta { font-size: 12px; color: var(--muted); }
+  .dlp-formats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fmt { padding: 7px 14px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; }
+  .fmt.active { border-color: var(--cyan); color: var(--cyan); background: rgba(34,211,238,0.1); }
+  .dlp-progress { display: flex; align-items: center; gap: 10px; }
+  .dlp-bar { flex: 1; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .dlp-fill { height: 100%; width: 35%; background: linear-gradient(90deg,#3b82f6,#8b5cf6); }
+  .dlp-progress span { font-size: 11px; color: var(--muted); }
+  .dlp-btn { padding: 12px; border-radius: 10px; background: linear-gradient(135deg,#3b82f6,#8b5cf6); color: #fff; font-weight: 700; font-size: 14px; border: none; cursor: pointer; box-shadow: var(--glow-blue); }
+
+  /* Platforms */
+  .platforms { margin-top: 20px; padding: 34px 30px; border-radius: 22px; background: var(--card); border: 1px solid var(--border); backdrop-filter: blur(10px); }
+  .platforms h3 { font-size: 20px; font-weight: 700; margin-bottom: 22px; text-align: center; }
+  .plat-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 16px; }
+  .plat { padding: 18px 12px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); text-align: center; transition: transform .2s, border-color .2s; }
+  .plat:hover { transform: translateY(-3px); border-color: var(--border); }
+  .plat .logo { width: 44px; height: 44px; margin: 0 auto 10px; border-radius: 12px; display: grid; place-items: center; font-weight: 800; font-size: 18px; color: #fff; }
+  .plat .name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .plat .desc { font-size: 11px; color: var(--muted); }
+  .yt .logo { background: linear-gradient(135deg,#ff0000,#cc0000); }
+  .ig .logo { background: linear-gradient(135deg,#f58529,#dd2a7b,#8134af); }
+  .fb .logo { background: linear-gradient(135deg,#1877f2,#0d5ec7); }
+  .tt .logo { background: linear-gradient(135deg,#000,#25f4ee,#fe2c55); }
+  .tw .logo { background: linear-gradient(135deg,#1da1f2,#0d8bd9); }
+  .more .logo { background: linear-gradient(135deg,#3b82f6,#8b5cf6); }
+
+  /* How it works */
+  .how { margin-top: 60px; }
+  .section-title { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 28px; }
+  .how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .how-step { padding: 28px 22px; border-radius: 18px; background: var(--card); border: 1px solid var(--border); backdrop-filter: blur(8px); text-align: center; position: relative; overflow: hidden; }
+  .how-num { position: absolute; top: 12px; right: 16px; font-size: 34px; font-weight: 800; color: rgba(96,165,250,0.12); }
+  .how-ic { width: 52px; height: 52px; margin: 0 auto 14px; border-radius: 14px; background: rgba(59,130,246,0.12); border: 1px solid var(--border); display: grid; place-items: center; font-size: 24px; }
+  .how-step h4 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .how-step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* FAQ */
+  .faq { margin-top: 60px; }
+  .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0; overflow: hidden; }
+  .faq-item summary { padding: 16px 20px; cursor: pointer; font-weight: 600; font-size: 15px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: '+'; color: var(--cyan); font-size: 20px; }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item p { padding: 0 20px 16px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+  /* Contact */
+  .contact { margin-top: 60px; text-align: center; }
+  .contact-sub { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .tg-card { max-width: 420px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 18px 22px; border-radius: 16px; background: linear-gradient(135deg, rgba(0,136,204,0.15), rgba(59,130,246,0.1)); border: 1px solid rgba(0,136,204,0.35); text-decoration: none; color: var(--text); transition: transform .2s, box-shadow .2s; box-shadow: 0 8px 30px rgba(0,136,204,0.15); }
+  .tg-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,136,204,0.3); }
+  .tg-icon { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg,#0088cc,#229ed9); display: grid; place-items: center; box-shadow: 0 0 24px rgba(0,136,204,0.4); }
+  .tg-text { display: flex; flex-direction: column; text-align: left; flex: 1; }
+  .tg-label { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .tg-user { font-size: 18px; font-weight: 700; background: linear-gradient(90deg,#4fc3f7,#22d3ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tg-arrow { font-size: 22px; color: var(--cyan); }
+
+  /* Ad banner */
+  .ad-banner { margin-top: 26px; padding: 22px 26px; border-radius: 16px; background: linear-gradient(90deg, rgba(40,10,15,0.7), rgba(20,8,12,0.7)); border: 1px solid rgba(239,68,68,0.25); display: flex; align-items: center; justify-content: space-between; gap: 20px; position: relative; overflow: hidden; }
+  .ad-banner::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(239,68,68,0.04) 0 10px, transparent 10px 20px); }
+  .ad-left { display: flex; align-items: center; gap: 16px; position: relative; }
+  .ad-logo { width: 46px; height: 46px; border-radius: 10px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.35); display: grid; place-items: center; color: #fca5a5; font-weight: 800; font-size: 12px; }
+  .ad-text { font-size: 17px; font-weight: 700; }
+  .ad-cta { padding: 10px 20px; border-radius: 10px; background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; font-weight: 700; font-size: 14px; border: none; cursor: pointer; box-shadow: 0 0 24px rgba(239,68,68,0.3); position: relative; }
+
+  /* Features */
+  .features { margin-top: 60px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: start; }
+  .feat-left h2 { font-size: 34px; font-weight: 800; line-height: 1.25; }
+  .feat-left p { margin-top: 14px; color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 420px; }
+  .feat-left .btn-outline { margin-top: 22px; }
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .feat-card { padding: 20px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); backdrop-filter: blur(8px); transition: transform .2s, border-color .2s; }
+  .feat-card:hover { transform: translateY(-3px); border-color: var(--border2); }
+  .feat-card .ic { width: 36px; height: 36px; border-radius: 10px; background: rgba(59,130,246,0.12); border: 1px solid rgba(96,165,250,0.3); display: grid; place-items: center; color: var(--cyan); margin-bottom: 12px; }
+  .feat-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .feat-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* Quality mockup */
+  .quality-wrap { margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .quality-mock { position: relative; transform: rotate(-3deg); }
+  .quality-mock .panel { padding: 20px; border-radius: 18px; background: linear-gradient(180deg, rgba(15,28,60,0.85), rgba(7,19,39,0.9)); border: 1px solid var(--border2); box-shadow: 0 24px 60px rgba(0,0,0,0.5), var(--glow-purple); }
+  .qm-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .qm-thumb { width: 70px; height: 48px; border-radius: 8px; background: linear-gradient(135deg,#1e3a8a,#7c3aed); position: relative; overflow: hidden; }
+  .qm-thumb::after { content: '▶'; position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,0.8); font-size: 16px; }
+  .qm-title { font-size: 14px; font-weight: 700; }
+  .qm-sub { font-size: 11px; color: var(--muted); }
+  .qm-opts { display: flex; flex-direction: column; gap: 8px; }
+  .qm-opt { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+  .qm-opt.active { border-color: var(--cyan); background: rgba(34,211,238,0.1); }
+  .qm-opt .dl { color: var(--cyan); }
+  .qm-label { font-size: 12px; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
+  .quality-text h3 { font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+  .quality-text p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+
+  /* Footer */
+  footer { margin-top: 70px; padding: 30px 0 24px; border-top: 1px solid rgba(96,165,250,0.12); }
+  .foot { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .foot-left { display: flex; align-items: center; gap: 12px; }
+  .foot-nav { display: flex; gap: 24px; list-style: none; }
+  .foot-nav a { font-size: 13px; color: var(--muted); }
+  .foot-right { display: flex; align-items: center; gap: 16px; }
+  .socials { display: flex; gap: 10px; }
+  .soc { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); display: grid; place-items: center; color: var(--muted); font-size: 13px; font-weight: 700; }
+  .copy { font-size: 12px; color: var(--dim); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal.show { display: flex; }
+  .modal-box { width: 420px; max-width: 90vw; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 22px; box-shadow: var(--glow-purple); }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .modal-head h3 { font-size: 18px; font-weight: 700; }
+  .modal-close { background: transparent; border: none; color: var(--muted); font-size: 24px; cursor: pointer; }
+  .dl-history { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .dl-history li { display: flex; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
+  .status { color: var(--cyan); font-size: 12px; font-weight: 600; }
+  .status.pending { color: #fbbf24; }
+  .particles-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.4; }
+  header, main, footer { position: relative; z-index: 1; }
+  .hamburger { display: none; }
+  header { position: sticky; }
+  nav.mobile-open + .nav-right {} 
+  @media (max-width: 768px) {
+    .hamburger { display: grid; }
+    nav { display: none; position: absolute; top: 68px; left: 0; right: 0; background: rgba(2,8,23,0.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    nav.open { display: block; }
+    nav ul { flex-direction: column; padding: 14px 24px; gap: 12px; }
+  }
+  @media (max-width: 1100px) {
+    .hero, .features, .quality-wrap { grid-template-columns: 1fr; }
+    .plat-grid { grid-template-columns: repeat(3,1fr); }
+    nav ul { gap: 18px; }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    h1 { font-size: 32px; }
+    .hero { padding: 40px 0 20px; min-height: auto; }
+    .art-wrap { height: 360px; }
+    .art-card { width: 320px; height: 360px; }
+    .feat-left h2 { font-size: 26px; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; }
+    .plat-grid { grid-template-columns: repeat(2,1fr); }
+    .ad-banner { flex-direction: column; text-align: center; }
+    .ad-text { font-size: 15px; }
+    .quality-mock { transform: none; }
+    .foot { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .foot-nav { flex-wrap: wrap; gap: 14px; }
+    .modal-box { width: 92vw; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 0 16px; }
+    h1 { font-size: 26px; }
+    .url-box { flex-direction: column; align-items: stretch; }
+    .dl-btn { width: 100%; }
+    .feat-indicators { gap: 10px 14px; }
+    .feat-indicators span { font-size: 12px; }
+    .plat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .plat { padding: 14px 8px; }
+    .logo-name { font-size: 16px; }
+    .btn-primary { padding: 8px 14px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="particles" class="particles-canvas"></canvas>
+<header>
+  <div class="container">
+    <div class="nav">
+      <div class="logo">
+        <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="logo-text">
+          <span class="logo-name">BD Downloader</span>
+          <span class="logo-sub">ভিডিও ডাউনলোডার</span>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#home">হোম</a></li>
+          <li><a href="#platforms">সাপোর্টেড সাইট</a></li>
+          <li><a href="#how">কীভাবে কাজ করে</a></li>
+          <li><a href="#features">ফিচারসমূহ</a></li>
+          <li><a href="#contact">যোগাযোগ</a></li>
+        </ul>
+      </nav>
+      <div class="nav-right">
+        <button class="hamburger icon-btn" id="hamburger" aria-label="মেনু" style="display:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="icon-btn" title="থিম">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </div>
+        <button class="btn-primary">আমার ডাউনলোড</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero reveal" id="home">
+    <div>
+      <div class="badge"><span class="dot"></span>দ্রুত • সহজ • সম্পূর্ণ ফ্রি</div>
+      <h1>আপনার পছন্দের ভিডিও <span class="grad">ডাউনলোড</span> করুন একদম সহজে</h1>
+      <p class="hero-desc">ইউটিউব, ইনস্টাগ্রাম, ফেসবুক, টিকটক, টুইটার (X) এবং আরও অনেক সাইট থেকে ভিডিও, রিলস, শর্টস ও অন্যান্য সমর্থিত কনটেন্ট ডাউনলোড করুন সহজে।</p>
+      <div class="url-box">
+        <span class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </span>
+        <input type="text" placeholder="ভিডিওর লিংক এখানে পেস্ট করুন..." />
+        <button class="dl-btn">ডাউনলোড করুন</button>
+      </div>
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-text" id="progressText">প্রসেসিং...</span>
+      </div>
+      <div class="feat-indicators">
+        <span><span class="chk">✓</span>দ্রুত প্রসেসিং</span>
+        <span><span class="chk">✓</span>নিরাপদ ও নির্ভরযোগ্য</span>
+        <span><span class="chk">✓</span>সব ডিভাইসে কাজ করে</span>
+        <span><span class="chk">✓</span>সহজ ব্যবহার</span>
+      </div>
+    </div>
+    <div class="dl-preview">
+      <div class="dlp-head">
+        <span class="dlp-dot"></span>
+        <span>লাইভ ডাউনলোড প্রিভিউ</span>
+      </div>
+      <div class="dlp-thumb">
+        <div class="dlp-play">▶</div>
+      </div>
+      <div class="dlp-info">
+        <div class="dlp-title">আপনার ভিডিওর শিরোনাম এখানে দেখাবে</div>
+        <div class="dlp-meta">youtube.com • 3:42 • MP4</div>
+      </div>
+      <div class="dlp-formats">
+        <button class="fmt active">1080p</button>
+        <button class="fmt">720p</button>
+        <button class="fmt">480p</button>
+        <button class="fmt">MP3</button>
+      </div>
+      <div class="dlp-progress">
+        <div class="dlp-bar"><div class="dlp-fill"></div></div>
+        <span>প্রস্তুত</span>
+      </div>
+      <button class="dlp-btn">ডাউনলোড শুরু করুন</button>
+    </div>
+  </section>
+
+  <section class="platforms reveal" id="platforms">
+    <h3>আমরা যেসব সাইট সাপোর্ট করি</h3>
+    <div class="plat-grid">
+      <div class="plat yt"><div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></div><div class="name">YouTube</div><div class="desc">ভিডিও • শর্টস • লাইভ</div></div>
+      <div class="plat ig"><div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 2 .2 2.5.4.6.2 1 .5 1.5 1 .4.4.7.9 1 1.5.2.5.3 1.3.4 2.5.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 2-.4 2.5-.2.6-.5 1-1 1.5-.4.4-.9.7-1.5 1-.5.2-1.3.3-2.5.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-2-.2-2.5-.4-.6-.2-1-.5-1.5-1-.4-.4-.7-.9-1-1.5-.2-.5-.3-1.3-.4-2.5C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-2 .4-2.5.2-.6.5-1 1-1.5.4-.4.9-.7 1.5-1 .5-.2 1.3-.3 2.5-.4C8.4 2.2 8.8 2.2 12 2.2zm0 2.2c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.4-.5.2-.9.4-1.3.8-.4.4-.6.7-.8 1.3-.2.4-.3 1-.4 2.1-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.7.4 2.1.2.5.4.9.8 1.3.4.4.7.6 1.3.8.4.2 1 .3 2.1.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.4.5-.2.9-.4 1.3-.8.4-.4.6-.7.8-1.3.2-.4.3-1 .4-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.4-2.1-.2-.5-.4-.9-.8-1.3-.4-.4-.7-.6-1.3-.8-.4-.2-1-.3-2.1-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.7a4 4 0 1 1 0 7.9 4 4 0 0 1 0-7.9zm0 6.5a2.5 2.5 0 1 0 0-5.1 2.5 2.5 0 0 0 0 5.1zm5.1-6.7a.9.9 0 1 1-1.9 0 .9.9 0 0 1 1.9 0z"/></svg></div><div class="name">Instagram</div><div class="desc">রিলস • পোস্ট • স্টোরি</div></div>
+      <div class="plat fb"><div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9v2.2h3.3l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1z"/></svg></div><div class="name">Facebook</div><div class="desc">ভিডিও • রিলস</div></div>
+      <div class="plat tt"><div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M19.6 6.3a5.5 5.5 0 0 1-3.3-1.1 5.5 5.5 0 0 1-2.2-3.2h-3.1v13.2a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.6a5.7 5.7 0 0 0-.8-.1 5.7 5.7 0 1 0 5.7 5.7V9.3a8.6 8.6 0 0 0 5.5 2V8.2a5.5 5.5 0 0 1-2-.6 5.5 5.5 0 0 1-1-.9z"/></svg></div><div class="name">TikTok</div><div class="desc">ভিডিও • রিলস</div></div>
+      <div class="plat tw"><div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M18.2 2.2h3.4l-7.5 8.6 8.8 11h-6.9l-5.4-7-6.2 7H1l8.1-9.3L.8 2.2h7.1l4.9 6.4 5.4-6.4zm-1.2 17.4h1.9L7.3 4.3H5.3l11.7 15.3z"/></svg></div><div class="name">Twitter (X)</div><div class="desc">ভিডিও • GIF</div></div>
+      <div class="plat more"><div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 14h-2v-2h2v2zm0-4h-2V6h2v6z"/></svg></div><div class="name">More Sites</div><div class="desc">আরও সাইট আসছে...</div></div>
+    </div>
+  </section>
+
+  <section class="how reveal" id="how">
+    <h3 class="section-title">কীভাবে কাজ করে</h3>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-num">০১</div>
+        <div class="how-ic">🔗</div>
+        <h4>লিংক পেস্ট করুন</h4>
+        <p>আপনার পছন্দের ভিডিওর লিংক কপি করে ইনপুট বক্সে পেস্ট করুন।</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">০২</div>
+        <div class="how-ic">⚙️</div>
+        <h4>অপশন বেছে নিন</h4>
+        <p>উপলভ্য মান ও ফরম্যাট থেকে আপনার পছন্দেরটি নির্বাচন করুন।</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">০৩</div>
+        <div class="how-ic">⬇</div>
+        <h4>ডাউনলোড করুন</h4>
+        <p>এক ক্লিকে ভিডিওটি আপনার ডিভাইসে সংরক্ষণ করুন।</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ad-banner reveal">
+    <div class="ad-left">
+      <div class="ad-logo">AD</div>
+      <div class="ad-text">আপনার সাইটের জন্য কার্যকর বিজ্ঞাপনের সমাধান</div>
+    </div>
+    <button class="ad-cta">এখনই শুরু করুন</button>
+  </section>
+
+  <section class="features reveal" id="features">
+    <div class="feat-left">
+      <h2>কেন আমাদের ব্যবহার করবেন?</h2>
+      <p>আমরা আপনার সময় এবং নিরাপত্তাকে গুরুত্ব দিই। তাই দিচ্ছি সহজ ব্যবহার, দ্রুত প্রসেসিং এবং ঝামেলামুক্ত অভিজ্ঞতা।</p>
+      <button class="btn-outline">আরও জানুন</button>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="ic">HD</div>
+        <h4>উচ্চ মানের ভিডিও</h4>
+        <p>উপলভ্য থাকলে HD, Full HD এবং অন্যান্য সমর্থিত মান নির্বাচন করুন।</p>
+      </div>
+      <div class="feat-card">
+        <div class="ic">✓</div>
+        <h4>নিরাপদ অভিজ্ঞতা</h4>
+        <p>নিরাপদ সংযোগ ও সুরক্ষিত ব্যবহারের প্রতি গুরুত্ব।</p>
+      </div>
+      <div class="feat-card">
+        <div class="ic">📱</div>
+        <h4>সব ডিভাইসে</h4>        <p>মোবাইল, ট্যাবলেট এবং ডেস্কটপের জন্য উপযোগী ডিজাইন।</p>
+      </div>
+      <div class="feat-card">
+        <div class="ic">→</div>
+        <h4>সহজ ব্যবহার</h4>
+        <p>লিংক পেস্ট করুন, উপলভ্য অপশন বেছে নিন এবং ডাউনলোড শুরু করুন।</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="quality-wrap reveal">
+    <div class="quality-text">
+      <h3>ভিডিওর মান নির্বাচন করুন</h3>
+      <p>আপনার প্রয়োজন অনুযায়ী উপলভ্য মানের মধ্যে থেকে বেছে নিন। উদাহরণস্বরূপ 1080p, 720p, 480p বা 360p — দ্রুত এবং সহজ।</p>
+    </div>
+    <div class="quality-mock">
+      <div class="panel">
+        <div class="qm-head">
+          <div class="qm-thumb"></div>
+          <div>
+            <div class="qm-title">আপনার ভিডিও</div>
+            <div class="qm-sub">youtube.com/watch?v=...</div>
+          </div>
+        </div>
+        <div class="qm-label">ভিডিওর মান নির্বাচন করুন</div>
+        <div class="qm-opts">
+          <div class="qm-opt active"><span>1080p • Full HD</span><span class="dl">⬇</span></div>
+          <div class="qm-opt"><span>720p • HD</span><span class="dl">⬇</span></div>
+          <div class="qm-opt"><span>480p • SD</span><span class="dl">⬇</span></div>
+          <div class="qm-opt"><span>360p</span><span class="dl">⬇</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq reveal">
+    <h3 class="section-title">সাধারণ প্রশ্নাবলী</h3>
+    <div class="faq-list">
+      <details class="faq-item"><summary>BD Downloader কি সম্পূর্ণ ফ্রি?</summary><p>হ্যাঁ, BD Downloader সম্পূর্ণ ফ্রি এবং কোনো রেজিস্ট্রেশন ছাড়াই ব্যবহার করা যায়।</p></details>
+      <details class="faq-item"><summary>কোন কোন সাইট সাপোর্ট করে?</summary><p>YouTube, Instagram, Facebook, TikTok, Twitter (X) এবং আরও অনেক সাইট সাপোর্ট করা হয়।</p></details>
+      <details class="faq-item"><summary>ভিডিও কোন ফরম্যাটে ডাউনলোড হয়?</summary><p>MP4, WebM সহ উপলভ্য মান (HD, Full HD ইত্যাদি) নির্বাচন করা যায়।</p></details>
+      <details class="faq-item"><summary>মোবাইলে কাজ করে?</summary><p>হ্যাঁ, সব ডিভাইসে — মোবাইল, ট্যাবলেট ও ডেস্কটপে কাজ করে।</p></details>
+    </div>
+  </section>
+
+  <section class="contact reveal" id="contact">
+    <h3 class="section-title">যোগাযোগ করুন</h3>
+    <p class="contact-sub">যেকোনো প্রশ্ন বা সাহায্যের জন্য টেলিগ্রামে মেসেজ করুন।</p>
+    <a class="tg-card" href="https://t.me/delete_ee" target="_blank" rel="noopener">
+      <span class="tg-icon">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="#fff"><path d="M22 2L2 9.3l7.2 2.5L11.7 19l2.8-4.1L19 22l3-20z"/></svg>
+      </span>
+      <span class="tg-text">
+        <span class="tg-label">Telegram</span>
+        <span class="tg-user">@delete_ee</span>
+      </span>
+      <span class="tg-arrow">→</span>
+    </a>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div class="foot-left">
+        <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="logo-text">
+          <span class="logo-name">BD Downloader</span>
+          <span class="logo-sub">ভিডিও ডাউনলোডার</span>
+        </div>
+      </div>
+      <ul class="foot-nav">
+        <li><a href="#home">হোম</a></li>
+        <li><a href="#platforms">সাপোর্টেড সাইট</a></li>
+        <li><a href="#how">কীভাবে কাজ করে</a></li>
+        <li><a href="#features">ফিচারসমূহ</a></li>
+        <li><a href="#contact">যোগাযোগ</a></li>
+      </ul>
+      <div class="foot-right">
+        <div class="socials">
+          <div class="soc">▶</div>
+          <div class="soc">◎</div>
+          <div class="soc">f</div>
+          <div class="soc">X</div>
+          <div class="soc">♪</div>
+        </div>
+        <div class="copy">© ২০২৬ BD Downloader। সর্বস্বত্ব সংরক্ষিত।</div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="module">
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} });
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const hb = document.getElementById('hamburger');
+  const nav = document.querySelector('header nav');
+  hb && hb.addEventListener('click', ()=> nav.classList.toggle('open'));
+  document.querySelectorAll('header nav a').forEach(a=>a.addEventListener('click', ()=> nav.classList.remove('open')));
+  const themeBtn = document.querySelector('.icon-btn[title="থিম"]');
+  themeBtn && themeBtn.addEventListener('click', ()=> document.body.classList.toggle('light'));
+  const modal = document.getElementById('dlModal');
+  const modalClose = document.getElementById('modalClose');
+  document.querySelector('.btn-primary') && document.querySelector('.btn-primary').addEventListener('click', ()=> modal.classList.add('show'));
+  modalClose && modalClose.addEventListener('click', ()=> modal.classList.remove('show'));
+  modal && modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+  // ===== API CONFIG (from Vite env) =====
+  const API_BASE = (import.meta.env && import.meta.env.VITE_API_URL) ? import.meta.env.VITE_API_URL : '';
+  const RAPID_KEY = (import.meta.env && import.meta.env.VITE_RAPIDAPI_KEY) ? import.meta.env.VITE_RAPIDAPI_KEY : '';
+  const RAPID_HOST = (import.meta.env && import.meta.env.VITE_RAPIDAPI_HOST) ? import.meta.env.VITE_RAPIDAPI_HOST : 'youtube-media-downloader.p.rapidapi.com';
+  const apiHeaders = () => {
+    const h = {};
+    if (RAPID_KEY) { h['x-rapidapi-key'] = RAPID_KEY; h['x-rapidapi-host'] = RAPID_HOST; }
+    return h;
+  };
+  const apiUrl = (p) => (API_BASE || '') + p;
+  const dlBtn = document.querySelector('.dl-btn');
+  const pw = document.getElementById('progressWrap');
+  const pf = document.getElementById('progressFill');
+  const pt = document.getElementById('progressText');
+  function isSafeUrl(v){ try{ const u=new URL(v.trim()); return (u.protocol==='http:'||u.protocol==='https:') && !/localhost|127\.0\.0\.1|0\.0\.0\.0/i.test(u.hostname); }catch(e){ return false; } }
+  dlBtn && dlBtn.addEventListener('click', async ()=>{
+    const input = document.querySelector('.url-box input');
+    const val = input.value;
+    if(!isSafeUrl(val)){ pt.textContent='সঠিক লিংক দিন'; pw.classList.add('show'); pf.style.width='0%'; return; }
+    pw.classList.add('show'); pf.style.width='10%'; pt.textContent='তথ্য আনা হচ্ছে...';
+    try {
+      let data, r;
+      if (RAPID_KEY) {
+        const vid = (val.match(/(?:v=|youtu\.be\/|shorts\/)([A-Za-z0-9_-]{11})/) || [])[1];
+        const endpoint = (API_BASE || 'https://youtube-media-downloader.p.rapidapi.com') + '/v2/video/details?videoId=' + encodeURIComponent(vid || val);
+        r = await fetch(endpoint, { headers: { ...apiHeaders() } });
+        data = await r.json();
+      } else {
+        r = await fetch(apiUrl('/api/info'), {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({url:val})});
+        data = await r.json();
+      }
+      if (!r.ok) { pt.textContent = (data && (data.message || data.error)) || 'ব্যর্থ'; pf.style.width='0%'; return; }
+      // update preview card
+      const title = document.querySelector('.dlp-title');
+      const meta = document.querySelector('.dlp-meta');
+        const t = data.title || data.videoDetails?.title || data.videoTitle || 'ভিডিও';
+        if (title) title.textContent = t;
+        if (meta) meta.textContent = RAPID_KEY ? (data.lengthSeconds? Math.floor(data.lengthSeconds/60)+':'+String(data.lengthSeconds%60).padStart(2,'0')+' • ' : '') + 'MP4' : ((data.duration? Math.floor(data.duration/60)+':'+String(data.duration%60).padStart(2,'0')+' • ' : '') + (data.formats&&data.formats[0]?data.formats[0].ext.toUpperCase():'MP4'));
+      const fmtBox = document.querySelector('.dlp-formats');
+      if (fmtBox && data.formats && data.formats.length) {
+        const uniq = [...new Set(data.formats.map(f=> f.label||f.ext).filter(Boolean))].slice(0,6);
+        fmtBox.innerHTML = uniq.map((l,i)=>`<button class="fmt ${i===0?'active':''}" data-fmt="${l}">${l}</button>`).join('');
+        fmtBox.querySelectorAll('.fmt').forEach(b=>b.addEventListener('click',()=>{ fmtBox.querySelectorAll('.fmt').forEach(x=>x.classList.remove('active')); b.classList.add('active'); }));
+      }
+      pf.style.width='100%'; pt.textContent='প্রস্তুত — ডাউনলোড করুন';
+      // store for download
+      const dlUrl = data.downloadUrl || data.url || data.videoUrl || (Array.isArray(data.links)&&data.links[0]&& (data.links[0].url||data.links[0])) || (Array.isArray(data.videos)&&data.videos[0]&& (data.videos[0].url||data.videos[0].downloadUrl));
+      window.__velix = { url: val, format: (data.formats&&data.formats[0]?data.formats[0].id:'best'), downloadUrl: dlUrl };
+    } catch (e) { pt.textContent='সংযোগ ত্রুটি'; pf.style.width='0%'; }
+  });
+  // download button in preview card
+  const dlpBtn = document.querySelector('.dlp-btn');
+  dlpBtn && dlpBtn.addEventListener('click', ()=>{
+    if (!window.__velix) { pt.textContent='আগে লিংক দিন'; return; }
+    const fmtEl = document.querySelector('.dlp-formats .fmt.active');
+    const fmt = fmtEl ? fmtEl.dataset.fmt : 'best';
+    if (window.__velix.downloadUrl) { window.open(window.__velix.downloadUrl, '_blank'); return; }
+    let u = apiUrl('/api/download')+'?url='+encodeURIComponent(window.__velix.url)+'&format='+encodeURIComponent(fmt);
+    window.location.href = u;
+  });
+</script>
+<script>
+  const c=document.getElementById('particles');const ctx=c.getContext('2d');let W,H,pts=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}resize();addEventListener('resize',resize);
+  for(let i=0;i<70;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.6+.4});
+  (function tick(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(96,165,250,0.7)';ctx.fill();});requestAnimationFrame(tick);})();
+</script>
+<div class="modal" id="dlModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>আমার ডাউনলোড</h3>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <ul class="dl-history">
+      <li><span>video_1080p.mp4</span><span class="status">সম্পন্ন</span></li>
+      <li><span>reels_720p.mp4</span><span class="status">সম্পন্ন</span></li>
+      <li><span>shorts_480p.mp4</span><span class="status pending">প্রসেসিং</span></li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
