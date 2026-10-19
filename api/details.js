@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-  const key = process.env.RAPIDAPI_KEY || process.env.CONFIG_RAPIDAPI_KEY;
+  const key = process.env.RAPIDAPI_KEY || process.env.CONFIG_RAPIDAPI_KEY || process.env.VITE_RAPIDAPI_KEY;
   const host = process.env.RAPIDAPI_HOST || 'youtube-media-downloader.p.rapidapi.com';
   const { videoId } = req.query;
   if (!key) return res.status(500).json({ error: 'Missing RAPIDAPI_KEY' });
