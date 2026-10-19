@@ -536,13 +536,6 @@
   modal && modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show'); });
   // ===== API CONFIG (from Vite env) =====
   const API_BASE = (import.meta.env && import.meta.env.VITE_API_URL) ? import.meta.env.VITE_API_URL : '';
-  const RAPID_KEY = (import.meta.env && import.meta.env.VITE_RAPIDAPI_KEY) ? import.meta.env.VITE_RAPIDAPI_KEY : '';
-  const RAPID_HOST = (import.meta.env && import.meta.env.VITE_RAPIDAPI_HOST) ? import.meta.env.VITE_RAPIDAPI_HOST : 'youtube-media-downloader.p.rapidapi.com';
-  const apiHeaders = () => {
-    const h = {};
-    if (RAPID_KEY) { h['x-rapidapi-key'] = RAPID_KEY; h['x-rapidapi-host'] = RAPID_HOST; }
-    return h;
-  };
   const apiUrl = (p) => (API_BASE || '') + p;
   const dlBtn = document.querySelector('.dl-btn');
   const pw = document.getElementById('progressWrap');
@@ -556,15 +549,9 @@
     pw.classList.add('show'); pf.style.width='10%'; pt.textContent='তথ্য আনা হচ্ছে...';
     try {
       let data, r;
-      if (RAPID_KEY) {
-        const vid = (val.match(/(?:v=|youtu\.be\/|shorts\/)([A-Za-z0-9_-]{11})/) || [])[1];
-        const endpoint = (API_BASE || 'https://youtube-media-downloader.p.rapidapi.com') + '/v2/video/details?videoId=' + encodeURIComponent(vid || val);
-        r = await fetch(endpoint, { headers: { ...apiHeaders() } });
-        data = await r.json();
-      } else {
-        r = await fetch(apiUrl('/api/info'), {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({url:val})});
-        data = await r.json();
-      }
+      const vid = (val.match(/(?:v=|youtu\.be\/|shorts\/)([A-Za-z0-9_-]{11})/) || [])[1];
+      r = await fetch(apiUrl('/api/details?videoId=' + encodeURIComponent(vid || val)));
+      data = await r.json();
       if (!r.ok) { pt.textContent = (data && (data.message || data.error)) || 'ব্যর্থ'; pf.style.width='0%'; return; }
       // update preview card
       const title = document.querySelector('.dlp-title');
@@ -572,16 +559,14 @@
         const t = data.title || data.videoDetails?.title || data.videoTitle || 'ভিডিও';
         if (title) title.textContent = t;
         if (meta) meta.textContent = RAPID_KEY ? (data.lengthSeconds? Math.floor(data.lengthSeconds/60)+':'+String(data.lengthSeconds%60).padStart(2,'0')+' • ' : '') + 'MP4' : ((data.duration? Math.floor(data.duration/60)+':'+String(data.duration%60).padStart(2,'0')+' • ' : '') + (data.formats&&data.formats[0]?data.formats[0].ext.toUpperCase():'MP4'));
-      const fmtBox = document.querySelector('.dlp-formats');
-      if (fmtBox && data.formats && data.formats.length) {
-        const uniq = [...new Set(data.formats.map(f=> f.label||f.ext).filter(Boolean))].slice(0,6);
-        fmtBox.innerHTML = uniq.map((l,i)=>`<button class="fmt ${i===0?'active':''}" data-fmt="${l}">${l}</button>`).join('');
-        fmtBox.querySelectorAll('.fmt').forEach(b=>b.addEventListener('click',()=>{ fmtBox.querySelectorAll('.fmt').forEach(x=>x.classList.remove('active')); b.classList.add('active'); }));
-      }
+        const fmtBox = document.querySelector('.dlp-formats');
+        if (fmtBox && Array.isArray(data.videos) && data.videos.length) {
+          fmtBox.innerHTML = data.videos.map((v,i)=>`<button class="fmt ${i===0?'active':''}" data-url="${encodeURIComponent(v.url)}">${v.quality||v.qualityLabel||'MP4'}</button>`).join('');
+          fmtBox.querySelectorAll('.fmt').forEach(b=>b.addEventListener('click',()=>{ fmtBox.querySelectorAll('.fmt').forEach(x=>x.classList.remove('active')); b.classList.add('active'); }));
+        }
       pf.style.width='100%'; pt.textContent='প্রস্তুত — ডাউনলোড করুন';
       // store for download
-      const dlUrl = data.downloadUrl || data.url || data.videoUrl || (Array.isArray(data.links)&&data.links[0]&& (data.links[0].url||data.links[0])) || (Array.isArray(data.videos)&&data.videos[0]&& (data.videos[0].url||data.videos[0].downloadUrl));
-      window.__velix = { url: val, format: (data.formats&&data.formats[0]?data.formats[0].id:'best'), downloadUrl: dlUrl };
+      window.__velix = { url: val, downloadUrl: (Array.isArray(data.videos)&&data.videos[0]) ? data.videos[0].url : null };
     } catch (e) { pt.textContent='সংযোগ ত্রুটি'; pf.style.width='0%'; }
   });
   // download button in preview card
@@ -589,10 +574,9 @@
   dlpBtn && dlpBtn.addEventListener('click', ()=>{
     if (!window.__velix) { pt.textContent='আগে লিংক দিন'; return; }
     const fmtEl = document.querySelector('.dlp-formats .fmt.active');
-    const fmt = fmtEl ? fmtEl.dataset.fmt : 'best';
-    if (window.__velix.downloadUrl) { window.open(window.__velix.downloadUrl, '_blank'); return; }
-    let u = apiUrl('/api/download')+'?url='+encodeURIComponent(window.__velix.url)+'&format='+encodeURIComponent(fmt);
-    window.location.href = u;
+    const url = fmtEl ? decodeURIComponent(fmtEl.dataset.url) : window.__velix.downloadUrl;
+    if (url) { window.open(url, '_blank'); return; }
+    pt.textContent = 'ডাউনলোড লিংক পাওয়া যায়নি';
   });
 </script>
 <script>
